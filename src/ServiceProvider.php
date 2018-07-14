@@ -7,6 +7,7 @@
 
 namespace Houdunwang\AutoCreate;
 
+use Houdunwang\AutoCreate\Commands\AutoCreateCommand;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class ServiceProvider extends BaseServiceProvider

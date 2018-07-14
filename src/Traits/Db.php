@@ -13,10 +13,9 @@ trait Db
 {
     protected $denyColumn = ['id', 'created_at', 'updated_at'];
 
-    protected function getColumnData($model=null)
+    protected function getColumnData()
     {
-        $model   = $model ?? $this->model;
-        $columns = $this->listTableColumns($model);
+        $columns = $this->listTableColumns();
         $configs = [];
         foreach ($columns as $column) {
             if ($this->allowColumn($column)) {
@@ -58,11 +57,9 @@ trait Db
         return isset($match[1]) ? trim($match[1]) : '';
     }
 
-    protected function listTableColumns($model)
+    protected function listTableColumns()
     {
-        $model = $model ?? $this->model;
-
-        return $this->getDoctrineConnection()->getSchemaManager()->listTableColumns($model->getTable());
+        return $this->getDoctrineConnection()->getSchemaManager()->listTableColumns($this->modelInstance->getTable());
     }
 
     protected function isTable()
@@ -77,15 +74,12 @@ trait Db
         return false;
     }
 
-    public function formatColumns($model = null, $filter = [])
+    public function formatColumns()
     {
-        $model   = $model ?? $this->model;
-        $columns = $this->listTableColumns($model);
+        $columns = $this->listTableColumns();
         $data    = [];
         foreach ($columns as $column) {
-            if ( in_array($column->getName(), $filter)) {
-                $data[$column->getName()] = $this->formatComment($column);
-            }
+            $data[$column->getName()] = $this->formatComment($column);
         }
 
         return $data;

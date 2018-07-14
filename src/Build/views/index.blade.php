@@ -13,11 +13,7 @@
                         <thead>
                         <tr>
                             <th style="width: 10%;">编号</th>
-                            @foreach($handle->getListColumns() as $column)
-                                @isset($column['title'])
-                                    <th>{{$column['title']}}</th>
-                                @endisset
-                            @endforeach
+                            {COLUMNS}
                             <th>创建时间</th>
                             <th>修改时间</th>
                             <th>&nbsp;</th>
@@ -26,20 +22,14 @@
                         <tbody>
                         @foreach($data as $d)
                             <tr>
-                                <td>{{$d['id']}}</td>
-                                @foreach($handle->getListColumns() as $column)
-                                    @isset($column['title'])
-                                        <td>
-                                            {!! $handle->value($d,$column['name']) !!}
-                                        </td>
-                                    @endisset
-                                @endforeach
-                                <td>{{$d['created_at']}}</td>
-                                <td>{{$d['updated_at']}}</td>
+                                <td>{!! $d['id'] !!}</td>
+                                {COLUMNS_VALUE}
+                                <td>{!! $d['created_at'] !!}</td>
+                                <td>{!! $d['updated_at'] !!}</td>
                                 <td class="text-right">
-                                    <a href="/{SMODULE}/{SMODEL}/{{$d['id']}}/edit" class="btn btn-secondary">编辑</a>
+                                    <a href="/{ROUTE_ROOT}/{{$d['id']}}/edit" class="btn btn-secondary">编辑</a>
                                     <button type="button" class="btn btn-secondary btn-danger" onclick="del({{$d['id']}},this)">删除</button>
-                                    <form action="/{SMODULE}/{SMODEL}/{{$d['id']}}" hidden method="post">
+                                    <form action="/{ROUTE_ROOT}/{{$d['id']}}" hidden method="post">
                                         @csrf @method('DELETE')
                                     </form>
                                 </td>
@@ -52,7 +42,7 @@
         </div>
     </div>
     <div class="float-right">
-        {{$data->links()}}
+        {!!  $data->links() !!}
     </div>
 @endsection
 @section('scripts')

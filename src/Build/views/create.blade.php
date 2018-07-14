@@ -6,10 +6,10 @@
             <li class="nav-item"><a href="/{SMODULE}/{SMODEL}" class="nav-link">{MODEL_TITLE}列表</a></li>
             <li class="nav-item"><a href="#" class="nav-link active">添加{MODEL_TITLE}</a></li>
         </ul>
-        <form action="/{SMODULE}/{SMODEL}" method="post">
+        <form action="/{ROUTE_ROOT}" method="post">
             <div class="card-body card-body-contrast">
                 @csrf
-                {!! $html !!}
+                {HTML}
             </div>
             <div class="card-footer text-muted">
                 <button class="btn btn-primary offset-sm-2">保存提交</button>

@@ -1,27 +1,23 @@
 <?php
-namespace {NAMESPACE}Http\Controllers;
+namespace {NAMESPACE_CONTROLLER};
 
 use App\Http\Controllers\Controller;
-use {NAMESPACE}Entities\{MODEL};
 use Illuminate\Http\Request;
-use {NAMESPACE}Tables\{MODEL}Handle;
-use Modules\Article\Http\Requests\{MODEL}Request;
-class {MODEL}Controller extends Controller
+use {NAMESPACE_MODEL};
+use {NAMESPACE_REQUEST};
+class {CONTROLLE_NAME} extends Controller
 {
     //显示列表
     public function index()
     {
         $data = {MODEL}::paginate(10);
-        $handle = new {MODEL}Handle(new {MODEL});
-        return view('{SMODULE}::{SMODEL}.index', compact('data','handle'));
+        return view('{VIEW_NAME}.index', compact('data'));
     }
 
     //创建视图
-    public function create()
+    public function create({MODEL} ${SMODEL})
     {
-        $handle = new {MODEL}Handle(new {MODEL});
-        $html   = $handle->render();
-        return view('{SMODULE}::{SMODEL}.create', compact('html'));
+        return view('{VIEW_NAME}.create',compact('{SMODEL}'));
     }
 
     //保存数据
@@ -30,36 +26,32 @@ class {MODEL}Controller extends Controller
         ${SMODEL}->fill($request->all());
         ${SMODEL}->save();
 
-        return redirect('/{SMODULE}/{SMODEL}')->with('success', '保存成功');
+        return redirect('/{ROUTE_ROOT}')->with('success', '保存成功');
     }
 
     //显示记录
-    public function show({MODEL} ${SMODEL})
+    public function show({MODEL} $field)
     {
-        $handle = new {MODEL}Handle(${SMODEL});
-        $html   = $handle->render();
-        return view('{SMODULE}::{SMODEL}.show', compact('html'));
+        return view('{VIEW_NAME}.show', compact('field'));
     }
 
     //编辑视图
     public function edit({MODEL} ${SMODEL})
     {
-        $handle = new {MODEL}Handle(${SMODEL});
-        $html   = $handle->render();
-        return view('{SMODULE}::{SMODEL}.edit', compact('html','{SMODEL}'));
+        return view('{VIEW_NAME}.edit', compact('{SMODEL}'));
     }
 
     //更新数据
     public function update({MODEL}Request $request, {MODEL} ${SMODEL})
     {
         ${SMODEL}->update($request->all());
-        return redirect('/{SMODULE}/{SMODEL}')->with('success','更新成功');
+        return redirect('/{ROUTE_ROOT}')->with('success','更新成功');
     }
 
     //删除模型
     public function destroy({MODEL} ${SMODEL})
     {
         ${SMODEL}->delete();
-        return redirect('/{SMODULE}/{SMODEL}')->with('success','删除成功');
+        return redirect('{CONTROLLE_INDEX_ROUTE}')->with('success','删除成功');
     }
 }

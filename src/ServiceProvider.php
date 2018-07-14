@@ -7,13 +7,11 @@
 
 namespace Houdunwang\AutoCreate;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
-class LaravelServiceProvider extends ServiceProvider
+class ServiceProvider extends BaseServiceProvider
 {
-    public $singletons = [
-        'hd-autocreate' => MenusService::class,
-    ];
+    public $singletons = [];
 
     /**
      * Bootstrap services.
@@ -24,20 +22,9 @@ class LaravelServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                ModuleCreateCommand::class,
-                ConfigCreateCommand::class,
-                PermissionCreateCommand::class,
-                ModelCreateCommand::class,
-                BuildCreateCommand::class,
+                AutoCreateCommand::class,
             ]);
         }
-
-        $this->loadMigrationsFrom(__DIR__.'/Migrations');
-
-        //配置文件
-        $this->publishes([
-            __DIR__.'/hd_module.php' => config_path('hd_module.php'),
-        ]);
     }
 
     /**
@@ -47,7 +34,7 @@ class LaravelServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('HDModule', function () {
+        $this->app->singleton('HDAutoCreate', function () {
             return new Provider();
         });
     }

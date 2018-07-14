@@ -4,7 +4,7 @@
  * |      Date: 2018/7/8 下午11:16
  * |    Author: 向军大叔 <2300071698@qq.com>
  * '-------------------------------------------------------------------*/
-namespace Houdunwang\Module\Traits;
+namespace Houdunwang\AutoCreate\Traits;
 
 trait BuildVars
 {

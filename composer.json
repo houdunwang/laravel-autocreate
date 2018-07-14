@@ -11,10 +11,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "\\Houdunwang\\AutoCreate\\LaravelServiceProvider"
+                "\\Houdunwang\\AutoCreate\\ServiceProvider"
             ],
             "aliases": {
-                "HDModule": "\\Houdunwang\\Module\\Factory"
+                "HDModule": "\\Houdunwang\\AutoCreate\\Factory"
             }
         }
     },

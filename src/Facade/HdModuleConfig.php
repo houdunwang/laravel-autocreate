@@ -4,7 +4,7 @@
  * |      Date: 2018/7/5 上午1:18
  * |    Author: 向军大叔 <2300071698@qq.com>
  * '-------------------------------------------------------------------*/
-namespace Houdunwang\Module\Facade;
+namespace Houdunwang\AutoCreate\Facade;
 
 class HdModuleConfig extends Facade
 {

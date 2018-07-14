@@ -5,11 +5,11 @@
  * |    Author: 向军大叔 <2300071698@qq.com>
  * '-------------------------------------------------------------------*/
 
-namespace Houdunwang\Module\Exceptions;
+namespace Houdunwang\AutoCreate\Exceptions;
 
 use Throwable;
 
-class PermissionDenyException extends \Exception
+class AutoCreateException extends \Exception
 {
     public function __construct(string $message = "", int $code = 0, \Throwable $previous = null)
     {

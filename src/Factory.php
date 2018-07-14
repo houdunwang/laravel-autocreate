@@ -5,9 +5,8 @@
  * |    Author: 向军大叔 <2300071698@qq.com>
  * '-------------------------------------------------------------------*/
 
-namespace Houdunwang\Module;
+namespace Houdunwang\AutoCreate;
 
-use Houdunwang\Module\Services\ConfigService;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -24,6 +23,6 @@ class Factory extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'HDModule';
+        return 'HDAutoCreate';
     }
 }

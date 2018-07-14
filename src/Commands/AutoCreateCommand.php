@@ -1,13 +1,13 @@
 <?php
-namespace Houdunwang\Module\Commands;
+namespace Houdunwang\AutoCreate\Commands;
 
-use Houdunwang\LaravelView\Traits\Db;
-use Houdunwang\Module\Traits\BuildVars;
+use Houdunwang\AutoCreate\Traits\Db;
+use Houdunwang\AutoCreate\Traits\BuildVars;
 use Illuminate\Console\Command;
 use Artisan;
 use Storage;
 
-class BuildCreateCommand extends Command
+class AutoCreateCommand extends Command
 {
     use BuildVars, Db;
     /**
@@ -15,19 +15,18 @@ class BuildCreateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'hd:build {model} {module} {model_title} {module_title}';
+    protected $signature = 'hd:autocreate-autocreate {model} {title}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'create  controller view request';
+    protected $description = 'create controller view request';
     protected $module;
     protected $model;
     protected $modelInstance;
-    protected $modelTitle;
-    protected $moduleTitle;
+    protected $title;
 
     /**
      * Create a new command instance.
@@ -41,10 +40,9 @@ class BuildCreateCommand extends Command
 
     public function handle()
     {
-        $this->model  = ucfirst($this->argument('model'));
-        $this->module = ucfirst($this->argument('module'));
-        $this->modelTitle = ucfirst($this->argument('model_title'));
-        $this->moduleTitle = ucfirst($this->argument('module_title'));
+        $this->model  = $this->argument('model');
+        $this->module = $this->getModule();
+        $this->title  = ucfirst($this->argument('title'));
         $this->setVars($this->model, $this->module);
         if ($this->check()) {
             $this->setModelInstance();
@@ -59,22 +57,31 @@ class BuildCreateCommand extends Command
         }
     }
 
+    protected function getModule()
+    {
+        if (preg_match('/^Modules\\(.+?)\\/i', $this->model, $match)) {
+            dd($match);
+        }
+    }
+
     protected function setModuleMenus()
     {
-        $file =$this->getVar('MODULE_PATH').'config/menus.php';
+        $file  = $this->getVar('MODULE_PATH').'config/menus.php';
         $menus = include $file;
         if ( ! isset($menus[$this->getVar('SMODULE')])) {
             $menus[$this->getVar('SMODULE')] = [
                 "title"      => "{$this->moduleTitle}管理",
                 "icon"       => "fa fa-navicon",
                 'permission' => '权限标识',
-                "menus"      => []
+                "menus"      => [],
             ];
         }
-        $menus[$this->getVar('SMODULE')]['menus'][]=
-            ["title" => "{$this->modelTitle}管理", "permission" => '', "url" => "/{$this->vars['SMODULE']}/{$this->vars['SMODEL']}"]
-        ;
-        file_put_contents($file,'<?php return '.var_export($menus,true).';');
+        $menus[$this->getVar('SMODULE')]['menus'][] =
+            ["title"      => "{$this->modelTitle}管理",
+             "permission" => '',
+             "url"        => "/{$this->vars['SMODULE']}/{$this->vars['SMODEL']}",
+            ];
+        file_put_contents($file, '<?php return '.var_export($menus, true).';');
     }
 
     protected function setModelFillable()

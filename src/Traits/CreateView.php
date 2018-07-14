@@ -8,14 +8,6 @@ namespace Houdunwang\AutoCreate\Traits;
 
 trait CreateView
 {
-    protected function getViewDir()
-    {
-        $dir = $this->vars['VIEW_PATH'];
-        is_dir($dir) or mkdir($dir, 0755, true);
-
-        return $dir;
-    }
-
     protected function createIndexBlade()
     {
         //首页
@@ -38,11 +30,11 @@ trait CreateView
         }
         $this->setVar('COLUMNS_VALUE', $COLUMNS_VALUE);
         $content = $this->replaceVars(__DIR__."/../Build/views/index.blade.php");
-        $file    = $this->getViewDir()."/index.blade.php";
-        if (is_file($file)) {
+        $file    = $this->vars['VIEW_PATH']."/index.blade.php";
+        if ( ! is_file($file)) {
             file_put_contents($file, $content);
+            $this->info('index.blade.php view create successflly');
         }
-        $this->info('index.blade.php view create successflly');
     }
 
     protected function createCreateAndEditBlade()
@@ -59,14 +51,22 @@ trait CreateView
                 }
             }
         }
-        $this->setVar('HTML',$content);
-        $content = $this->replaceVars(__DIR__.'/../Build/views/create.blade.php');
-        file_put_contents($this->vars['VIEW_PATH'].'/create.blade.php', $content);
 
-        $this->info('create.blade.php view create successflly');
-        $content = $this->replaceVars(__DIR__.'/../Build/views/edit.blade.php');
-        file_put_contents($this->vars['VIEW_PATH'].'/edit.blade.php', $content);
-        $this->info('edit.blade.php view create successflly');
+        $file = $this->vars['VIEW_PATH'].'/create.blade.php';
+        if ( ! is_file($file)) {
+            $this->setVar('HTML', $content);
+            $content = $this->replaceVars(__DIR__.'/../Build/views/create.blade.php');
+            file_put_contents($this->vars['VIEW_PATH'].'/create.blade.php', $content);
+            $this->info('create.blade.php view create successflly');
+        }
+
+        $file = $this->vars['VIEW_PATH'].'/edit.blade.php';
+        if ( ! is_file($file)) {
+            $this->info('create.blade.php view create successflly');
+            $content = $this->replaceVars(__DIR__.'/../Build/views/edit.blade.php');
+            file_put_contents($this->vars['VIEW_PATH'].'/edit.blade.php', $content);
+            $this->info('edit.blade.php view create successflly');
+        }
     }
 
     protected function _input($column)
@@ -171,6 +171,7 @@ str;
         if ($content) {
             $this->setVar('FORM_HTML', $content);
             $file = __DIR__.'/../Build/forms/radio.blade.php';
+
             return $this->replaceVars($file);
         }
     }

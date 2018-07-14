@@ -1,4 +1,14 @@
 # 自动构建
-根据模型自动创建controller、views、Request。系统提供根据模块创建与基础创建。
+根据模型自动创建controller、views、Request。
 
-## 基础构建
+```
+php artisan hd:autocreate Modules/Article/Entities/Content.php 文章 
+```
+
+**参数说明**
+
+| 参数   | 说明         |
+| ------ | ------------ |
+| 参数一 | 模型文件     |
+| 参数二 | 模型中文描述 |
+

@@ -106,26 +106,20 @@ class AutoCreateCommand extends Command
         $columns = array_keys($this->getColumnData($this->modelInstance));
         $columns = implode("','", $columns);
         $content = file_get_contents($this->modelFile);
-        $content = preg_replace('@(protected\s+\$fillable\s*\=\s*\[)\s*\];@im', '${1}'."'".$columns.'\'];', $content);
-        file_put_contents($this->modelFile, $content);
+        $regp    = '@(protected\s+\$fillable\s*\=\s*\[)\s*\];@im';
+        if (preg_match($regp, $content)) {
+            $content = preg_replace($regp, '${1}'."'".$columns.'\'];', $content);
+            file_put_contents($this->modelFile, $content);
+            $this->info('update model fillable attribute');
+        }
     }
 
     protected function createViews()
     {
+        $dir = $this->vars['VIEW_PATH'];
+        is_dir($dir) or mkdir($dir, 0755, true);
         $this->createIndexBlade();
         $this->createCreateAndEditBlade();
-        return;
-        foreach (['create', 'edit', 'index', 'show'] as $name) {
-            $content = $this->replaceVars(__DIR__."/build/views/{$name}.blade.php");
-            $dir     = $this->vars['MODULE_PATH']."Resources/views/{$this->vars['SMODEL']}/";
-            is_dir($dir) or mkdir($dir, 0755, true);
-            Storage::makeDirectory($dir);
-            $file = $dir."{$name}.blade.php";
-            if ( ! is_file($file)) {
-                file_put_contents($file, $content);
-            }
-        }
-        $this->info('view create successflly');
     }
 
     protected function createRoute()
@@ -138,7 +132,7 @@ class AutoCreateCommand extends Command
         $route = file_get_contents($file);
         //检测路由
         if (strstr($route, "{$this->vars['SMODEL']}-route")) {
-            return $this->info('route is exists');
+            return;
         }
         if ($this->moduleName) {
             $route .= <<<str
@@ -165,9 +159,7 @@ str;
         $file = $this->getVar('CONTROLLER_PATH').$this->modelName.'Controller.php';
 
         if (is_file($file)) {
-            $this->info('controller file is exists');
-
-            //return false;
+            return false;
         }
         $content = $this->replaceVars(__DIR__.'/../Build/controller.tpl');
         file_put_contents($file, $content);
@@ -178,9 +170,7 @@ str;
     {
         $file = $this->getVar('REQUEST_PATH').$this->modelName.'Request.php';
         if (is_file($file)) {
-            $this->info('request file is exists');
-
-            //return false;
+            return false;
         }
         $content = $this->replaceVars(__DIR__.'/../Build/request.tpl');
         $content = str_replace('{REQUEST_RULE}', var_export($this->getRequestRule(), true), $content);

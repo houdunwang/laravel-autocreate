@@ -52,6 +52,6 @@ class {CONTROLLE_NAME} extends Controller
     public function destroy({MODEL} ${SMODEL})
     {
         ${SMODEL}->delete();
-        return redirect('{CONTROLLE_INDEX_ROUTE}')->with('success','删除成功');
+        return redirect('{ROUTE_ROOT}')->with('success','删除成功');
     }
 }

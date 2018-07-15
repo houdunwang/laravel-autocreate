@@ -61,8 +61,6 @@ class AutoCreateCommand extends Command
         $this->createRequest();
         $this->createRoute();
         $this->createViews();
-
-        return;
         $this->setModuleMenus();
     }
 
@@ -82,11 +80,14 @@ class AutoCreateCommand extends Command
 
     protected function setModuleMenus()
     {
-        $file  = $this->getVar('MODULE_PATH').'config/menus.php';
+        if(!$this->modelName){
+            return;
+        }
+        $file  = $this->getVar('MODULE_PATH').'/config/menus.php';
         $menus = include $file;
         if ( ! isset($menus[$this->getVar('SMODULE')])) {
             $menus[$this->getVar('SMODULE')] = [
-                "title"      => "{$this->moduleTitle}管理",
+                "title"      => "{$this->title}管理",
                 "icon"       => "fa fa-navicon",
                 'permission' => '权限标识',
                 "menus"      => [],
@@ -94,11 +95,12 @@ class AutoCreateCommand extends Command
         }
         $menus[$this->getVar('SMODULE')]['menus'][] =
             [
-                "title"      => "{$this->modelTitle}管理",
+                "title"      => "{$this->title}管理",
                 "permission" => '',
                 "url"        => "/{$this->vars['SMODULE']}/{$this->vars['SMODEL']}",
             ];
         file_put_contents($file, '<?php return '.var_export($menus, true).';');
+        $this->info('menu create successfully');
     }
 
     protected function setModelFillable()

@@ -83,7 +83,7 @@ class AutoCreateCommand extends Command
         if(!$this->modelName){
             return;
         }
-        $file  = $this->getVar('MODULE_PATH').'/config/menus.php';
+        $file  = $this->getVar('MODULE_PATH').'/Config/menus.php';
         $menus = include $file;
         if ( ! isset($menus[$this->getVar('SMODULE')])) {
             $menus[$this->getVar('SMODULE')] = [

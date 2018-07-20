@@ -80,7 +80,7 @@ class AutoCreateCommand extends Command
 
     protected function setModuleMenus()
     {
-        if(!$this->modelName){
+        if ( ! $this->modelName) {
             return;
         }
         $file  = $this->getVar('MODULE_PATH').'/Config/menus.php';
@@ -105,7 +105,7 @@ class AutoCreateCommand extends Command
 
     protected function setModelFillable()
     {
-        $columns = array_keys($this->getColumnData($this->modelInstance));
+        $columns = array_keys($this->getColumnData());
         $columns = implode("','", $columns);
         $content = file_get_contents($this->modelFile);
         $regp    = '@(protected\s+\$fillable\s*\=\s*\[)\s*\];@im';
@@ -212,7 +212,7 @@ str;
         foreach ($columns as $column) {
             $check = $column && in_array($column['name'], $this->modelInstance->getFillAble());
             if ($check && $column['nonull']) {
-                $rules[$column['name'].'.required'] = $column['title'].'不能为空';
+                $rules[$column['name'].'.required'] = "请设置 ".$column['title'];
             }
         }
 

@@ -4,5 +4,10 @@
         <select id="{column['name']}" name="{column['name']}" class="form-control form-control-xs">
             {FORM_HTML}
         </select>
+        @if ($errors->has('{column['name']}'))
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $errors->first('{column['name']}') }}</strong>
+            </span>
+        @endif
     </div>
 </div>

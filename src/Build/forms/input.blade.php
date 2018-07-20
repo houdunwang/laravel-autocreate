@@ -6,7 +6,7 @@
                class="form-control form-control-sm form-control{{ $errors->has('{column['name']}') ? ' is-invalid' : '' }}">
         @if ($errors->has('{column['name']}'))
             <span class="invalid-feedback" role="alert">
-                <strong>{ $errors->first('{column['name']}') }</strong>
+                <strong>{{ $errors->first('{column['name']}') }}</strong>
             </span>
         @endif
     </div>

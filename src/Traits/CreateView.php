@@ -119,7 +119,7 @@ trait CreateView
                 $content .= <<<str
             <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" id="{$column['name']}-{$value}"
-                           {{\${$this->vars['SMODEL']}['{$column['name']}']=='{$value}'?'checked':''}}
+                           {{ old('{$column['name']}',\${$this->vars['SMODEL']}['{$column['name']}'])=='{$value}'?'checked':''}}
                            name="{$column['name']}" value="{$value}">
                     <label class="form-check-label" for="{$column['name']}-{$value}">{$title}</label>
            </div>
@@ -140,7 +140,9 @@ str;
         if (isset($column['options']) && count($column['options']) >= 3) {
             foreach ($column['options'][2] as $value => $title) {
                 $content .= <<<str
-           <option value="{$value}" {{\${$this->vars['SMODEL']}['{$column['name']}']=='{$value}'?'selected':''}} >{$title}</option>
+           <option value="{$value}"
+            {{old('{$column['name']}',\${$this->vars['SMODEL']}['{$column['name']}'])=='{$value}'?'selected':''}} 
+            >{$title}</option>
 str;
             }
         }
@@ -160,7 +162,7 @@ str;
                 $content .= <<<str
             <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio"
-                           {{\${$this->vars['SMODEL']}['{$column['name']}']=='{$value}'?'checked':''}}
+                           {{old('{$column['name']}',\${$this->vars['SMODEL']}['{$column['name']}'])=='{$value}'?'checked':''}}
                            name="{$column['name']}" value="{$value}"
                            id="{$column['name']}-{$value}">
                     <label class="form-check-label" for="{$column['name']}-{$value}">{$title}</label>

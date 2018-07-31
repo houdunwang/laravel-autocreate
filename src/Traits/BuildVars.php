@@ -27,12 +27,12 @@ trait BuildVars
         $this->vars['NAMESPACE_MODEL']       = $this->model;
         $this->vars['SMODEL']                = snake_case($this->modelName);
         $this->vars['SMODULE']               = snake_case($this->moduleName);
-        $this->vars['MODULE_PATH']           = 'Modules/'.$this->moduleName;
+        $this->vars['MODULE_PATH']           = config('modules.paths.modules'). '/'.$this->moduleName;
         $this->vars['MODEL_PATH']            = str_replace('\\', '/', basename($this->model)).'/';
         $this->vars['CONTROLLE_NAME']        = $this->modelName.'Controller';
         $this->vars['VIEW_NAME']             = $this->getViewName();
         $this->vars['VIEW_PATH']             = $this->getViewPath();
-        $this->vars['CONTROLLER_PATH']       = str_replace('\\', '/', $this->vars['NAMESPACE_CONTROLLER']).'/';
+        $this->vars['CONTROLLER_PATH']       = $this->vars['MODULE_PATH'].'/Http/Controllers/';
         $this->vars['REQUEST_PATH']          = $this->vars['CONTROLLER_PATH'].'../Requests/';
         $this->vars['ROUTE_ROOT']            = $this->moduleName ? $this->vars['SMODULE'].'/'. $this->vars['SMODEL'] :  $this->vars['SMODEL'];
         $this->vars['CONTROLLE_INDEX_ROUTE'] = $this->moduleName ? '/'.$this->moduleName.'/'.$this->modelName : '/'.$this->modelName;

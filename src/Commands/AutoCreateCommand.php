@@ -31,9 +31,6 @@ class AutoCreateCommand extends Command
     protected $modelFile;
     protected $module;
     protected $title;
-    protected $modelName;
-    protected $moduleName;
-
     /**
      * Create a new command instance.
      *
@@ -46,10 +43,11 @@ class AutoCreateCommand extends Command
 
     public function handle()
     {
-        $this->moduleName = $this->argument('module');
-        $this->modelFile = config('modules.paths.modules') . '/' . $this->moduleName . '/'
+        $this->model = $this->argument('model');
+        $this->module = $this->argument('module');
+        $this->modelFile = config('modules.paths.modules') . '/' . $this->module . '/'
             . config('modules.paths.generator.model.path') . '/' . $this->argument('model') . '.php';
-        $this->modelClass = config('modules.namespace') . '\\' . $this->moduleName . '\\' . config('modules.paths.generator.model.path')
+        $this->modelClass = config('modules.namespace') . '\\' . $this->module . '\\' . config('modules.paths.generator.model.path')
             . '\\' . $this->argument('model');
         if (!is_file($this->modelFile)) {
             $this->error("model file {$this->modelFile} no exists");
@@ -58,8 +56,6 @@ class AutoCreateCommand extends Command
         }
         $this->title = $this->argument('title');
         $this->setVar('MODEL_TITLE', $this->title);
-        $this->modelName = $this->argument('model');
-        $this->model = str_replace('.php', '', str_replace('/', '\\', $this->modelFile));
         $this->setModelInstance();
         $this->setVars();
         $this->setModelFillable();
@@ -77,9 +73,6 @@ class AutoCreateCommand extends Command
 
     protected function setModuleMenus()
     {
-        if (!$this->modelName) {
-            return;
-        }
         $file = $this->getVar('MODULE_PATH') . '/Config/menus.php';
         $menus = include $file;
         if (!isset($menus[$this->getVar('SMODULE')])) {
@@ -123,7 +116,7 @@ class AutoCreateCommand extends Command
 
     protected function createRoute()
     {
-        if ($this->moduleName) {
+        if ($this->module) {
             $file = $this->getVar('MODULE_PATH') . '/Http/routes.php';
         } else {
             $file = 'routes/web.php';
@@ -133,13 +126,13 @@ class AutoCreateCommand extends Command
         if (strstr($route, "{$this->vars['SMODEL']}-route")) {
             return;
         }
-        if ($this->moduleName) {
+        if ($this->module) {
             $route .= <<<str
 \n 
 //{$this->vars['SMODEL']}-route
-Route::group(['middleware' => ['web', 'auth:admin'],'prefix'=>'{$this->vars['SMODULE']}','namespace'=>"Modules\\{$this->vars['MODULE']}\Http\Controllers"], 
+Route::group(['middleware' => ['web'],'prefix'=>'{$this->vars['SMODULE']}','namespace'=>"{$this->vars['NAMESPACE_HTTP']}\Controllers"], 
 function () {
-    Route::resource('{$this->vars['SMODEL']}', '{$this->vars['MODEL']}Controller')->middleware("permission:admin,resource");
+    Route::resource('{$this->vars['SMODEL']}', '{$this->vars['MODEL']}Controller');
 });
 str;
         } else {
@@ -155,7 +148,7 @@ str;
 
     public function createController()
     {
-        $file = $this->getVar('CONTROLLER_PATH') . $this->modelName . 'Controller.php';
+        $file = $this->getVar('CONTROLLER_PATH') . $this->model . 'Controller.php';
 
         if (is_file($file)) {
             return false;
@@ -167,7 +160,7 @@ str;
 
     public function createRequest()
     {
-        $file = $this->getVar('REQUEST_PATH') . $this->modelName . 'Request.php';
+        $file = $this->getVar('REQUEST_PATH') . $this->model . 'Request.php';
         if (is_file($file)) {
             return false;
         }
